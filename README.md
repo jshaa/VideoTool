@@ -34,8 +34,28 @@ VideoTool.Core/       파이프라인 로직 (UI 의존성 없는 클래스 라�
     PyTorchRealEsrganService.cs PyTorch 엔진(infer.py) 실행 래퍼
     DependencyManager.cs       ffmpeg / realesrgan / python+torch 자동 다운로드-설치
     VideoUpscalePipeline.cs    청크 단위 파이프라인 오케스트레이터
+    TempWorkspace.cs           작업별 임시 폴더(프레임/업스케일 결과/조각/오디오) 관리, 청크마다 정리
+    ProcessRunner.cs           외부 프로세스 실행·출력 수집·취소 공통 처리
 PythonScripts/        infer.py, srvgg.py - PyTorch 엔진용 추론 스크립트(앱과 함께 배포됨)
 ```
+
+## 지원 모델 / 코덱
+
+| AI 모델 (ncnn-Vulkan) | 모델 파일 | 용도 |
+|---|---|---|
+| 일반 영상 - 고화질 | `realesrgan-x4plus` | 실사 영상, 느림 |
+| 애니메이션 영상 - 빠름 | `realesr-animevideov3` | 애니메이션 영상 |
+| 애니메이션/일러스트 - 고화질 | `realesrgan-x4plus-anime` | 애니메이션·일러스트 |
+
+PyTorch-CUDA 엔진은 `realesr-general-x4v3` 하나만 사용합니다.
+
+| 출력 코덱 | FFmpeg 인코더 | CRF 범위 (기본값) |
+|---|---|---|
+| H.264 (호환성 우선) | `libx264` | 0~51 (18) |
+| H.265 / HEVC (용량 절감) | `libx265` | 0~51 (20) |
+| AV1 (인코딩 느림) | `libsvtav1` | 0~63 (30) |
+
+기타 기본값: 목표 해상도 3840×2160, 청크 240프레임, 중간 프레임 형식 JPG, 타일 크기 0(자동), 오디오 192 kbps.
 
 ## 동작 원리
 

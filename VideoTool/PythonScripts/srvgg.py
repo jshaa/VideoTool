@@ -1,3 +1,7 @@
+# SRVGGNetCompact architecture adapted from Real-ESRGAN (https://github.com/xinntao/Real-ESRGAN)
+# Copyright (c) 2021, Xintao Wang. Licensed under the BSD 3-Clause License.
+# See THIRD_PARTY_NOTICES.md in the repository root.
+
 import torch.nn as nn
 import torch.nn.functional as F
 
